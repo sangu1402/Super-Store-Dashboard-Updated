@@ -204,7 +204,7 @@ else:
     product_grouped.sort_values(by=selected_kpi, ascending=False, inplace=True)
     top_10 = product_grouped.head(10)
 
- # ---- Side-by-Side Layout for Charts ----
+# ---- Side-by-Side Layout for Charts ----
     col_left, col_right = st.columns(2)
 
 with col_left:
@@ -216,11 +216,11 @@ with col_left:
         title=f"{selected_kpi} Over Time",
         labels={"Order Date": "Date", selected_kpi: selected_kpi},
         template="plotly_white",
-)
+    )
     fig_line.update_layout(height=400)
     st.plotly_chart(fig_line, use_container_width=True)
 
- with col_right:
+with col_right:
     # Horizontal Bar Chart
     fig_bar = px.bar(
         top_10,
@@ -236,9 +236,9 @@ with col_left:
     fig_bar.update_layout(
         height=400,
         yaxis={"categoryorder": "total ascending"}
-        )
+    )
     st.plotly_chart(fig_bar, use_container_width=True)
-
+        
 # ---- Pie Chart ----
     st.subheader("Sales Distribution by Category")
     category_sales = df.groupby("Category")["Sales"].sum().reset_index()
