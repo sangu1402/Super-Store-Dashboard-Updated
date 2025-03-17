@@ -204,12 +204,21 @@ else:
     product_grouped.sort_values(by=selected_kpi, ascending=False, inplace=True)
     top_10 = product_grouped.head(10)
 
-    # ---- Side-by-Side Layout for Charts ----
-col_left, col_right = st.columns(2)
+ # ---- Side-by-Side Layout for Charts ----
+    col_left, col_right = st.columns(2)
+
 with col_left:
-    fig_line = px.line(daily_grouped, x="Order Date", y=selected_kpi, title=f"{selected_kpi} Over Time", template="plotly_white")
-    fig_line.add_trace(go.Scatter(x=daily_grouped["Order Date"], y=daily_grouped[selected_kpi], mode='lines', name='Trend', line=dict(dash='dot')))
-    st.plotly_chart(fig_line, use_container_width=True)
+    # Line Chart
+    fig_line = px.line(
+        daily_grouped,
+        x="Order Date",
+        y=selected_kpi,
+        title=f"{selected_kpi} Over Time",
+        labels={"Order Date": "Date", selected_kpi: selected_kpi},
+        template="plotly_white",
+)
+        fig_line.update_layout(height=400)
+        st.plotly_chart(fig_line, use_container_width=True)
 
 with col_right:
     fig_bar = px.bar(top_10, x=selected_kpi, y="Product Name", orientation="h", title=f"Top 10 Products by {selected_kpi}", color=selected_kpi, template="plotly_white")
