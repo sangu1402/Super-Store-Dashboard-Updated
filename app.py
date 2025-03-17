@@ -62,36 +62,26 @@ total_quantity = df["Quantity"].sum() if not df.empty else 0
 total_profit = df["Profit"].sum() if not df.empty else 0
 margin_rate = (total_profit / total_sales) if total_sales != 0 else 0
 
+# ---- KPI Percentage Change ----
+df_previous = df_original[(df_original["Order Date"] >= pd.to_datetime(from_date) - pd.DateOffset(months=1)) & (df_original["Order Date"] < pd.to_datetime(from_date))]
+previous_sales = df_previous["Sales"].sum() if not df_previous.empty else 0
+sales_change = ((total_sales - previous_sales) / previous_sales * 100) if previous_sales != 0 else 0
+
 # ---- KPI Display ----
 kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
 with kpi_col1:
-    st.markdown("""
-        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
-            <h3>Total Sales</h3>
-            <p style='font-size: 24px;'>${:,.2f}</p>
-        </div>
-    """.format(total_sales), unsafe_allow_html=True)
+    st.metric(label="Total Sales", value=f"${total_sales:,.2f}", delta=f"{sales_change:.2f}%")
 with kpi_col2:
-    st.markdown("""
-        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
-            <h3>Quantity Sold</h3>
-            <p style='font-size: 24px;'>{:,.0f}</p>
-        </div>
-    """.format(total_quantity), unsafe_allow_html=True)
+    st.metric(label="Quantity Sold", value=f"{total_quantity:,}")
 with kpi_col3:
-    st.markdown("""
-        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
-            <h3>Total Profit</h3>
-            <p style='font-size: 24px;'>${:,.2f}</p>
-        </div>
-    """.format(total_profit), unsafe_allow_html=True)
+    st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
 with kpi_col4:
-    st.markdown("""
-        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
-            <h3>Margin Rate</h3>
-            <p style='font-size: 24px;'>{:,.2f}%</p>
-        </div>
-    """.format(margin_rate * 100), unsafe_allow_html=True)
+    st.metric(label="Margin Rate", value=f"{margin_rate*100:.2f}%")
+
+# ---- Top 10 Products ----
+st.subheader("Top 10 Products by Sales")
+top_products = df.groupby("Product Name")["Sales"].sum().nlargest(10).reset_index()
+st.dataframe(top_products)
 
 # ---- KPI Selection ----
 st.subheader("Visualize KPI Across Time & Top Products")
