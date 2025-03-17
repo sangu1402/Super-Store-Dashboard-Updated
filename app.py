@@ -108,4 +108,4 @@ else:
     
     with col2:
         revenue_expense_df = pd.DataFrame({"Metric": ["Revenue", "Expenses"], "Amount": [total_sales, total_expenses]})
-        fig_revenue_expense = px.bar(revenue_expense_df, x="Metric", y="Amount", title="Revenue vs Expenses", color="Metric", text
+        fig_revenue_expense = px.bar(revenue_expense_df, x="Metric", y="Amount", title="Revenue vs Expenses", color="Metric", text)
