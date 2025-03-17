@@ -242,10 +242,5 @@ with col2:
         template="plotly_white"
     )
     st.plotly_chart(fig_pie, use_container_width=True)
-    
-# Second Row: Bar Chart
-st.markdown("### 📊 Revenue vs Expenses Over Time")
-fig_bar = px.bar(filtered_df, x="Month", y=["Revenue", "Expenses"], barmode="group", title="📌 Revenue vs Expenses")
-st.plotly_chart(fig_bar, use_container_width=True)
 
 
