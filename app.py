@@ -204,11 +204,28 @@ else:
     product_grouped.sort_values(by=selected_kpi, ascending=False, inplace=True)
     top_10 = product_grouped.head(10)
 
-# ---- Side-by-Side Layout for Charts ----
-    col_left, col_right = st.columns(2)
+# ---- Custom CSS for Graph Borders ----
+st.markdown(
+    """
+    <style>
+    .chart-container {
+        border: 2px solid #EAEAEA;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #FFFFFF;
+        margin-bottom: 20px;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# ---- Side-by-Side Layout for Charts with Borders ----
+col_left, col_right = st.columns(2)
 
 with col_left:
-    # Line Chart
+    st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
     fig_line = px.line(
         daily_grouped,
         x="Order Date",
@@ -219,20 +236,27 @@ with col_left:
     )
     fig_line.update_layout(height=400)
     st.plotly_chart(fig_line, use_container_width=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with col_right:
-    fig_bar = px.bar(top_10, x=selected_kpi, y="Product Name", orientation="h", title=f"Top 10 Products by {selected_kpi}", color=selected_kpi, template="plotly_white")
+    st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
+    fig_bar = px.bar(
+        top_10, x=selected_kpi, y="Product Name", 
+        orientation="h", title=f"Top 10 Products by {selected_kpi}", 
+        color=selected_kpi, template="plotly_white"
+    )
     fig_bar.update_traces(texttemplate='%{x:.2s}', textposition='outside')
     st.plotly_chart(fig_bar, use_container_width=True)
-        
-# ---- Pie Chart ----
+    st.markdown("</div>", unsafe_allow_html=True)
+
+# ---- Centered Pie Chart with Border ----
 st.subheader("Sales Distribution by Category")
 category_sales = df.groupby("Category")["Sales"].sum().reset_index()
 
-# Centering the Pie Chart using st.columns
-col1, col2, col3 = st.columns([1, 2, 1])  # Middle column (col2) is wider
+col1, col2, col3 = st.columns([1, 2, 1])
 
 with col2:
+    st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
     fig_pie = px.pie(
         category_sales, 
         names="Category", 
@@ -242,4 +266,4 @@ with col2:
         template="plotly_white"
     )
     st.plotly_chart(fig_pie, use_container_width=True)
-
+    st.markdown("</div>", unsafe_allow_html=True)
