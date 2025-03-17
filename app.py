@@ -204,27 +204,27 @@ else:
     product_grouped.sort_values(by=selected_kpi, ascending=False, inplace=True)
     top_10 = product_grouped.head(10)
 
-# ---- Custom CSS for Graph Borders ----
+# ---- Custom CSS for Visible Borders ----
 st.markdown(
     """
     <style>
     .chart-container {
-        border: 2px solid #FFFFFF;  /* White border for dark mode */
-        border-radius: 8px;
+        border: 3px solid #FFFFFF;  /* Strong White Border */
+        border-radius: 10px;
         padding: 15px;
-        background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter background */
-        margin-bottom: 20px;
-        box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
+        background-color: rgba(255, 255, 255, 0.08); /* Slightly Brighter Background */
+        margin-bottom: 25px;
+        box-shadow: 4px 4px 12px rgba(255, 255, 255, 0.2);
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# ---- Applying Borders to Charts ----
-col_left, col_right = st.columns(2)
+# ---- Applying Borders to Each Chart ----
+col1, col2 = st.columns(2)
 
-with col_left:
+with col1:
     st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
     fig_line = px.line(
         daily_grouped,
@@ -238,7 +238,7 @@ with col_left:
     st.plotly_chart(fig_line, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-with col_right:
+with col2:
     st.markdown("<div class='chart-container'>", unsafe_allow_html=True)
     fig_bar = px.bar(
         top_10, x=selected_kpi, y="Product Name", 
