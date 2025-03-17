@@ -205,40 +205,16 @@ else:
     top_10 = product_grouped.head(10)
 
     # ---- Side-by-Side Layout for Charts ----
-    col_left, col_right = st.columns(2)
-
+        col_left, col_right = st.columns(2)
     with col_left:
-        # Line Chart
-        fig_line = px.line(
-            daily_grouped,
-            x="Order Date",
-            y=selected_kpi,
-            title=f"{selected_kpi} Over Time",
-            labels={"Order Date": "Date", selected_kpi: selected_kpi},
-            template="plotly_white",
-        )
-        fig_line.update_layout(height=400)
+        fig_line = px.line(daily_grouped, x="Order Date", y=selected_kpi, title=f"{selected_kpi} Over Time", template="plotly_white")
+        fig_line.add_trace(go.Scatter(x=daily_grouped["Order Date"], y=daily_grouped[selected_kpi], mode='lines', name='Trend', line=dict(dash='dot')))
         st.plotly_chart(fig_line, use_container_width=True)
 
     with col_right:
-        # Horizontal Bar Chart
-        fig_bar = px.bar(
-            top_10,
-            x=selected_kpi,
-            y="Product Name",
-            orientation="h",
-            title=f"Top 10 Products by {selected_kpi}",
-            labels={selected_kpi: selected_kpi, "Product Name": "Product"},
-            color=selected_kpi,
-            color_continuous_scale="Blues",
-            template="plotly_white",
-        )
-        fig_bar.update_layout(
-            height=400,
-            yaxis={"categoryorder": "total ascending"}
-        )
+        fig_bar = px.bar(top_10, x=selected_kpi, y="Product Name", orientation="h", title=f"Top 10 Products by {selected_kpi}", color=selected_kpi, template="plotly_white")
+        fig_bar.update_traces(texttemplate='%{x:.2s}', textposition='outside')
         st.plotly_chart(fig_bar, use_container_width=True)
-
 # ---- Pie Chart ----
     st.subheader("Sales Distribution by Category")
     category_sales = df.groupby("Category")["Sales"].sum().reset_index()
