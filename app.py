@@ -108,6 +108,12 @@ else:
     fig_bar.update_layout(height=400)
     st.plotly_chart(fig_bar, use_container_width=True)
 
+    # ---- Pie Chart ----
+    st.subheader("Sales Distribution by Category")
+    category_sales = df.groupby("Category")["Sales"].sum().reset_index()
+    fig_pie = px.pie(category_sales, names="Category", values="Sales", title="Sales by Category")
+    st.plotly_chart(fig_pie, use_container_width=True)
+
     # ---- Download Filtered Data ----
     st.subheader("Download Filtered Data")
     csv_data = df.to_csv(index=False).encode("utf-8")
