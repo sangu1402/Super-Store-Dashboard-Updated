@@ -270,3 +270,42 @@ with col2:
     )
     st.plotly_chart(fig_pie, use_container_width=True)
     st.markdown('</div>', unsafe_allow_html=True)
+
+import streamlit as st
+import plotly.express as px
+
+st.set_page_config(layout="wide")
+
+# Sample data
+df = px.data.gapminder().query("year == 2007")
+
+# Function to create a bordered section
+def bordered_chart(title, fig):
+    with st.container():
+        st.markdown(
+            f"""
+            <div style="
+                border: 2px solid white; 
+                border-radius: 10px; 
+                padding: 15px; 
+                background-color: rgba(255, 255, 255, 0.1);
+                box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.2);
+                margin-bottom: 25px;
+            ">
+            <h3 style="color:white; text-align:center;">{title}</h3>
+            """, unsafe_allow_html=True
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("</div>", unsafe_allow_html=True)
+
+# Create two charts
+fig1 = px.line(df, x="gdpPercap", y="lifeExp", title="Sample Line Chart")
+fig2 = px.bar(df, x="continent", y="pop", title="Sample Bar Chart")
+
+# Layout
+col1, col2 = st.columns(2)
+with col1:
+    bordered_chart("GDP vs Life Expectancy", fig1)
+with col2:
+    bordered_chart("Population by Continent", fig2)
+
