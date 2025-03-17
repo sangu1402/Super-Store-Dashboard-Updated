@@ -4,7 +4,8 @@ import plotly.express as px
 
 # Sample Data
 data = {
-    "Month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "Year": [2022]*6 + [2023]*6,
+    "Month": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jan", "Feb", "Mar", "Apr", "May", "Jun"],
     "Revenue": [20000, 22000, 25000, 27000, 26000, 29000, 31000, 33000, 35000, 34000, 36000, 38000],
     "Expenses": [12000, 13000, 14000, 15000, 14500, 16000, 17000, 18000, 19000, 18500, 20000, 21000],
     "Profit": [8000, 9000, 11000, 12000, 11500, 13000, 14000, 15000, 16000, 15500, 16000, 17000],
@@ -15,13 +16,24 @@ df = pd.DataFrame(data)
 
 # Sidebar Filters
 st.sidebar.header("🔍 Filters")
-selected_months = st.sidebar.multiselect("Select Months", df["Month"].unique(), default=df["Month"].unique())
-selected_category = st.sidebar.multiselect("Select Category", df["Category"].unique(), default=df["Category"].unique())
+
+# Year Filter
+selected_year = st.sidebar.selectbox("Select Year", df["Year"].unique(), index=0)
+
+# Month Filter
+selected_month = st.sidebar.selectbox("Select Month", ["All"] + list(df["Month"].unique()))
+
+# Category Filter
+selected_category = st.sidebar.selectbox("Select Category", ["All"] + list(df["Category"].unique()))
 
 # Filter Data
-filtered_df = df[(df["Month"].isin(selected_months)) & (df["Category"].isin(selected_category))]
+filtered_df = df[df["Year"] == selected_year]
+if selected_month != "All":
+    filtered_df = filtered_df[filtered_df["Month"] == selected_month]
+if selected_category != "All":
+    filtered_df = filtered_df[filtered_df["Category"] == selected_category]
 
-# KPIs
+# KPIs Calculation
 total_revenue = filtered_df["Revenue"].sum()
 total_expenses = filtered_df["Expenses"].sum()
 total_profit = filtered_df["Profit"].sum()
@@ -59,10 +71,8 @@ st.plotly_chart(fig_bar, use_container_width=True)
 
 # Insights Section
 st.markdown("### 📌 Insights & Recommendations")
-st.write("✔️ Revenue has shown an upward trend with occasional dips.")  
+st.write("✔️ Revenue shows an increasing trend, indicating growth.")  
 st.write("✔️ Sales contribute the highest to revenue, followed by Operations.")  
-st.write("✔️ Marketing expenses are high; optimizing them could improve profit margins.")  
+st.write("✔️ Marketing expenses are relatively high; optimizing them could improve profit margins.")  
 
-
-
-#💡 **Let me know if you need further improvements!**
+# **This dashboard now includes Dropdown filters, Year-based filtering, and a well-arranged layout. Let me know if you need more improvements!**
