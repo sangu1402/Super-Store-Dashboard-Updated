@@ -65,13 +65,33 @@ margin_rate = (total_profit / total_sales) if total_sales != 0 else 0
 # ---- KPI Display ----
 kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
 with kpi_col1:
-    st.metric(label="Total Sales", value=f"${total_sales:,.2f}")
+    st.markdown("""
+        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
+            <h3>Total Sales</h3>
+            <p style='font-size: 24px;'>${:,.2f}</p>
+        </div>
+    """.format(total_sales), unsafe_allow_html=True)
 with kpi_col2:
-    st.metric(label="Quantity Sold", value=f"{total_quantity:,.0f}")
+    st.markdown("""
+        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
+            <h3>Quantity Sold</h3>
+            <p style='font-size: 24px;'>{:,.0f}</p>
+        </div>
+    """.format(total_quantity), unsafe_allow_html=True)
 with kpi_col3:
-    st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
+    st.markdown("""
+        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
+            <h3>Total Profit</h3>
+            <p style='font-size: 24px;'>${:,.2f}</p>
+        </div>
+    """.format(total_profit), unsafe_allow_html=True)
 with kpi_col4:
-    st.metric(label="Margin Rate", value=f"{(margin_rate * 100):,.2f}%")
+    st.markdown("""
+        <div style='background-color: white; padding: 10px; border-radius: 10px;'>
+            <h3>Margin Rate</h3>
+            <p style='font-size: 24px;'>{:,.2f}%</p>
+        </div>
+    """.format(margin_rate * 100), unsafe_allow_html=True)
 
 # ---- KPI Selection ----
 st.subheader("Visualize KPI Across Time & Top Products")
