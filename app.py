@@ -242,5 +242,7 @@ with col2:
         "Metric": ["Revenue", "Expenses"],
         "Value": [df["Sales"].sum(), df["Sales"].sum() - df["Profit"].sum()]
     })
-    fig_revenue_expense = px.bar(revenue_expense_data, x="Metric", y="Value", title="Revenue vs Expenses", text_auto=True, template="plotly_white")
-    st.plotly_chart(fig_revenue_expense, use_container_width=True)
+    #fig_revenue_expense = px.bar(revenue_expense_data, x="Metric", y="Value", title="Revenue vs Expenses", text_auto=True, template="plotly_white")
+    #st.plotly_chart(fig_revenue_expense, use_container_width=True)
+    fig_revenue_expenses = px.bar(revenue_expenses, x="Category", y="Amount", title="Revenue vs Expenses", text="Amount", color="Category", color_discrete_map={"Revenue": "#1f77b4", "Expenses": "#ff7f0e"})
+    st.plotly_chart(fig_revenue_expenses, use_container_width=True)
