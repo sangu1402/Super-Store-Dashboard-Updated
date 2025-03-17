@@ -55,3 +55,75 @@ df = df[(df["Order Date"] >= pd.to_datetime(from_date)) & (df["Order Date"] <= p
 
 # ---- Page Title ----
 st.title("SuperStore KPI Dashboard")
+
+# ---- KPI Calculation ----
+total_sales = df["Sales"].sum() if not df.empty else 0
+total_quantity = df["Quantity"].sum() if not df.empty else 0
+total_profit = df["Profit"].sum() if not df.empty else 0
+margin_rate = (total_profit / total_sales) if total_sales != 0 else 0
+
+# ---- KPI Display ----
+kpi_col1, kpi_col2, kpi_col3, kpi_col4, kpi_col5 = st.columns(5)
+with kpi_col1:
+    st.metric(label="Total Sales", value=f"${total_sales:,.2f}")
+with kpi_col2:
+    st.metric(label="Quantity Sold", value=f"{total_quantity:,.0f}")
+with kpi_col3:
+    st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
+with kpi_col4:
+    st.metric(label="Margin Rate", value=f"{(margin_rate * 100):,.2f}%")
+with kpi_col5:
+    top_10_sales = df.groupby("Product Name")["Sales"].sum().nlargest(10).sum()
+    st.metric(label="Top 10 Product Sales", value=f"${top_10_sales:,.2f}")
+
+# ---- KPI Selection ----
+st.subheader("Visualize KPI Across Time & Top Products")
+
+if df.empty:
+    st.warning("No data available for the selected filters and date range.")
+else:
+    kpi_options = ["Sales", "Quantity", "Profit", "Margin Rate"]
+    selected_kpi = st.radio("Select KPI to display:", options=kpi_options, horizontal=True)
+
+    daily_grouped = df.groupby("Order Date").agg({"Sales": "sum", "Quantity": "sum", "Profit": "sum"}).reset_index()
+    daily_grouped["Margin Rate"] = daily_grouped["Profit"] / daily_grouped["Sales"].replace(0, 1)
+
+    product_grouped = df.groupby("Product Name").agg({"Sales": "sum", "Quantity": "sum", "Profit": "sum"}).reset_index()
+    product_grouped["Margin Rate"] = product_grouped["Profit"] / product_grouped["Sales"].replace(0, 1)
+    product_grouped.sort_values(by=selected_kpi, ascending=False, inplace=True)
+    top_10 = product_grouped.head(10)
+
+    col_left, col_right = st.columns(2)
+    with col_left:
+        fig_bar = px.bar(
+            daily_grouped, x="Order Date", y=selected_kpi,
+            title=f"{selected_kpi} Over Time", labels={"Order Date": "Date", selected_kpi: selected_kpi},
+            template="plotly_white"
+        )
+        fig_bar.update_layout(height=400)
+        st.plotly_chart(fig_bar, use_container_width=True)
+
+    with col_right:
+        fig_bar_product = px.bar(
+            top_10, x=selected_kpi, y="Product Name", orientation="h",
+            title=f"Top 10 Products by {selected_kpi}", labels={selected_kpi: selected_kpi, "Product Name": "Product"},
+            color=selected_kpi, color_continuous_scale="Blues", template="plotly_white"
+        )
+        fig_bar_product.update_layout(height=400, yaxis={"categoryorder": "total ascending"})
+        st.plotly_chart(fig_bar_product, use_container_width=True)
+
+    # ---- Pie Chart ----
+    st.subheader("Sales Distribution by Category")
+    category_sales = df.groupby("Category")["Sales"].sum().reset_index()
+    fig_pie = px.pie(category_sales, values="Sales", names="Category", title="Sales Breakdown by Category", template="plotly_white")
+    st.plotly_chart(fig_pie, use_container_width=True)
+
+    # ---- Download Filtered Data ----
+    st.subheader("Download Filtered Data")
+    csv_data = df.to_csv(index=False).encode("utf-8")
+    st.download_button(
+        label="Download CSV",
+        data=csv_data,
+        file_name="filtered_superstore_data.csv",
+        mime="text/csv"
+    )
