@@ -221,26 +221,25 @@ with col_left:
     st.plotly_chart(fig_line, use_container_width=True)
 
 with col_right:
-    # Horizontal Bar Chart
-    fig_bar = px.bar(
-        top_10,
-        x=selected_kpi,
-        y="Product Name",
-        orientation="h",
-        title=f"Top 10 Products by {selected_kpi}",
-        labels={selected_kpi: selected_kpi, "Product Name": "Product"},
-        color=selected_kpi,
-        color_continuous_scale="Blues",
-        template="plotly_white",
-    )
-    fig_bar.update_layout(
-        height=400,
-        yaxis={"categoryorder": "total ascending"}
-    )
+    fig_bar = px.bar(top_10, x=selected_kpi, y="Product Name", orientation="h", title=f"Top 10 Products by {selected_kpi}", color=selected_kpi, template="plotly_white")
+    fig_bar.update_traces(texttemplate='%{x:.2s}', textposition='outside')
     st.plotly_chart(fig_bar, use_container_width=True)
         
 # ---- Pie Chart ----
-    st.subheader("Sales Distribution by Category")
-    category_sales = df.groupby("Category")["Sales"].sum().reset_index()
-    fig_pie = px.pie(category_sales, names="Category", values="Sales", title="Sales Breakdown by Category", hole=0.3, template="plotly_white")
+st.subheader("Sales Distribution by Category")
+category_sales = df.groupby("Category")["Sales"].sum().reset_index()
+
+# Centering the Pie Chart using st.columns
+col1, col2, col3 = st.columns([1, 2, 1])  # Middle column (col2) is wider
+
+with col2:
+    fig_pie = px.pie(
+        category_sales, 
+        names="Category", 
+        values="Sales", 
+        title="Sales Breakdown by Category", 
+        hole=0.3, 
+        template="plotly_white"
+    )
     st.plotly_chart(fig_pie, use_container_width=True)
+
