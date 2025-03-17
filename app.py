@@ -230,6 +230,8 @@ st.subheader("Sales Distribution by Category")
 category_sales = df.groupby("Category")["Sales"].sum().reset_index()
 
 #  the Pie Chart using st.columns
+    
+col1, col2 = st.columns([1, 1])
 
 with col1:
     fig_pie = px.pie(category_sales, names="Category", values="Sales", title="Sales Breakdown by Category", hole=0.3, template="plotly_white")
