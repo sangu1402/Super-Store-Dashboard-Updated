@@ -54,4 +54,4 @@ st.write("✔️ Sales contribute the highest to revenue.")
 st.write("✔️ Consider optimizing marketing expenses for better profitability.")  
 
 ---
-💡 **Let me know if you need adjustments!**
+#**Let me know if you need adjustments!**
