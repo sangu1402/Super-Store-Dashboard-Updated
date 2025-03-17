@@ -1,4 +1,4 @@
-pip install seaborn
+!pip install seaborn -q
 import streamlit as st
 import pandas as pd
 import plotly.express as px
