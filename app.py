@@ -209,19 +209,19 @@ st.markdown(
     """
     <style>
     .chart-container {
-        border: 2px solid #EAEAEA;
+        border: 2px solid #FFFFFF;  /* White border for dark mode */
         border-radius: 8px;
-        padding: 10px;
-        background-color: #FFFFFF;
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter background */
         margin-bottom: 20px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+        box-shadow: 2px 2px 10px rgba(255, 255, 255, 0.1);
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# ---- Side-by-Side Layout for Charts with Borders ----
+# ---- Applying Borders to Charts ----
 col_left, col_right = st.columns(2)
 
 with col_left:
@@ -232,7 +232,7 @@ with col_left:
         y=selected_kpi,
         title=f"{selected_kpi} Over Time",
         labels={"Order Date": "Date", selected_kpi: selected_kpi},
-        template="plotly_white",
+        template="plotly_dark",
     )
     fig_line.update_layout(height=400)
     st.plotly_chart(fig_line, use_container_width=True)
@@ -243,7 +243,7 @@ with col_right:
     fig_bar = px.bar(
         top_10, x=selected_kpi, y="Product Name", 
         orientation="h", title=f"Top 10 Products by {selected_kpi}", 
-        color=selected_kpi, template="plotly_white"
+        color=selected_kpi, template="plotly_dark"
     )
     fig_bar.update_traces(texttemplate='%{x:.2s}', textposition='outside')
     st.plotly_chart(fig_bar, use_container_width=True)
@@ -263,7 +263,7 @@ with col2:
         values="Sales", 
         title="Sales Breakdown by Category", 
         hole=0.3, 
-        template="plotly_white"
+        template="plotly_dark"
     )
     st.plotly_chart(fig_pie, use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
