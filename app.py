@@ -65,21 +65,13 @@ margin_rate = (total_profit / total_sales) if total_sales != 0 else 0
 # ---- KPI Display ----
 kpi_col1, kpi_col2, kpi_col3, kpi_col4 = st.columns(4)
 with kpi_col1:
-    st.markdown("<div style='background-color: white; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
     st.metric(label="Total Sales", value=f"${total_sales:,.2f}")
-    st.markdown("</div>", unsafe_allow_html=True)
 with kpi_col2:
-    st.markdown("<div style='background-color: white; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
     st.metric(label="Quantity Sold", value=f"{total_quantity:,.0f}")
-    st.markdown("</div>", unsafe_allow_html=True)
 with kpi_col3:
-    st.markdown("<div style='background-color: white; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
     st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
-    st.markdown("</div>", unsafe_allow_html=True)
 with kpi_col4:
-    st.markdown("<div style='background-color: white; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
     st.metric(label="Margin Rate", value=f"{(margin_rate * 100):,.2f}%")
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ---- KPI Selection ----
 st.subheader("Visualize KPI Across Time & Top Products")
@@ -101,8 +93,8 @@ else:
         title=f"{selected_kpi} Over Time", labels={"Order Date": "Date", selected_kpi: selected_kpi},
         template="plotly_white"
     )
-    fig_bar.add_vline(x=peak_date, line_dash="dash", line_color="green", annotation_text="Peak")
-    fig_bar.add_vline(x=low_date, line_dash="dash", line_color="red", annotation_text="Low")
+    fig_bar.add_vline(x=peak_date.timestamp() * 1000, line_dash="dash", line_color="green", annotation_text="Peak")
+    fig_bar.add_vline(x=low_date.timestamp() * 1000, line_dash="dash", line_color="red", annotation_text="Low")
     fig_bar.update_layout(height=400)
     st.plotly_chart(fig_bar, use_container_width=True)
 
