@@ -217,8 +217,8 @@ with col_left:
         labels={"Order Date": "Date", selected_kpi: selected_kpi},
         template="plotly_white",
 )
-        fig_line.update_layout(height=400)
-        st.plotly_chart(fig_line, use_container_width=True)
+    fig_line.update_layout(height=400)
+    st.plotly_chart(fig_line, use_container_width=True)
 
 with col_right:
     fig_bar = px.bar(top_10, x=selected_kpi, y="Product Name", orientation="h", title=f"Top 10 Products by {selected_kpi}", color=selected_kpi, template="plotly_white")
